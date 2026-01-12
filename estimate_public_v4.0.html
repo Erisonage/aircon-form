@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>エアコンクリーニング無料見積・申込</title>
+  <style>
+    /* Base Vibe: Clean, Trustworthy, Mobile-App like */
+    :root {
+      --primary: #0056b3; /* Trust Blue */
+      --accent: #ff6b00;  /* Action Orange */
+      --bg: #f4f6f9;
+      --text: #333;
+      --card-bg: #ffffff;
+      --radius: 12px;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg); color: var(--text); margin: 0; padding: 0;
+      -webkit-text-size-adjust: 100%;
+    }
+    .wrap { max-width: 600px; margin: 0 auto; padding: 16px; padding-bottom: 80px; }
+    
+    /* Header & Certification */
+    header { text-align: center; margin-bottom: 20px; }
+    h1 { font-size: 22px; margin: 0; font-weight: 800; color: #111; }
+    .cert-box {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #eef4ff; border: 1px solid #d0e1ff;
+      padding: 6px 12px; border-radius: 99px; margin-top: 10px;
+      font-size: 13px; font-weight: 700; color: var(--primary);
+    }
+    .cert-icon { font-size: 16px; }
+    .cert-link { color: var(--primary); text-decoration: underline; font-size: 12px; margin-left: 4px; }
+
+    /* Cards */
+    .card { background: var(--card-bg); border-radius: var(--radius); padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 16px; }
+    .section-title { font-size: 16px; font-weight: 700; margin: 0 0 12px; border-left: 4px solid var(--primary); padding-left: 10px; }
+    
+    /* Form Elements */
+    label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
+    select, input, textarea {
+      width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
+      font-size: 16px; /* Prevents iOS zoom */ background: #fff; appearance: none;
+    }
+    select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; }
+    textarea { min-height: 80px; resize: vertical; }
+
+    /* Price Display */
+    .price-display { text-align: center; background: #fafafa; padding: 16px; border-radius: 8px; border: 2px solid #eee; }
+    .price-val { font-size: 28px; font-weight: 900; color: var(--text); line-height: 1.2; }
+    .price-sub { font-size: 12px; color: #666; margin-top: 4px; }
+    .price-note { font-size: 12px; color: var(--primary); font-weight: 700; margin-top: 8px; background: #eef4ff; display: inline-block; padding: 2px 8px; border-radius: 4px; }
+
+    /* Details & Options */
+    details.opt { margin-top: 12px; border: 1px solid #eee; border-radius: 8px; }
+    details.opt summary { padding: 12px; font-size: 13px; font-weight: 600; cursor: pointer; color: #555; list-style: none; display: flex; justify-content: space-between; }
+    details.opt summary::-webkit-details-marker { display: none; }
+    details.opt summary::after { content: '+'; font-size: 16px; }
+    details.opt[open] summary::after { content: '−'; }
+    .opt-content { padding: 12px; border-top: 1px solid #eee; background: #fafafa; }
+
+    /* Radio/Check Buttons */
+    .radio-group { display: flex; flex-direction: column; gap: 10px; }
+    .radio-label {
+      display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 8px;
+      cursor: pointer; font-size: 14px; font-weight: 600; transition: 0.2s;
+    }
+    .radio-label:has(input:checked) { border-color: var(--primary); background: #f0f7ff; color: var(--primary); }
+    input[type="radio"], input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--primary); margin: 0; }
+
+    /* Buttons */
+    .btn-area { position: fixed; bottom: 0; left: 0; right: 0; padding: 12px 16px; background: rgba(255,255,255,0.95); border-top: 1px solid #eee; backdrop-filter: blur(4px); display: flex; gap: 10px; z-index: 100; }
+    .btn {
+      flex: 1; padding: 14px; border: none; border-radius: 12px; font-size: 16px; font-weight: 700; cursor: pointer; text-align: center;
+      background: #eee; color: #999; pointer-events: none; transition: 0.2s;
+    }
+    .btn.primary { background: var(--accent); color: #fff; pointer-events: auto; box-shadow: 0 4px 12px rgba(255,107,0,0.3); }
+    .btn.back { flex: 0 0 80px; background: #fff; border: 1px solid #ddd; color: #333; pointer-events: auto; }
+
+    /* Utility */
+    .hidden { display: none !important; }
+    .error { color: #d00000; font-size: 12px; font-weight: 700; margin-top: 4px; display: none; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .muted { font-size: 12px; color: #777; line-height: 1.5; }
+    
+    /* Result Message */
+    #sendResult { font-weight: bold; text-align: center; margin-top: 10px; }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <h1>エアコンクリーニング見積・申込</h1>
+    <div class="cert-box">
+      <span class="cert-icon">🛡️</span>
+      <span>セーフティマイスター認定店</span>
+      <a href="https://www.j-cma.or.jp/smqualificationholders" target="_blank" class="cert-link">詳細</a>
+    </div>
+  </header>
+
+  <div id="step1">
+    <div class="card">
+      <div class="section-title">台数を教えてください</div>
+      <label>合計台数</label>
+      <select id="totalQty">
+        <option value="" selected disabled>選択してください</option>
+        <option value="1">1台</option>
+        <option value="2">2台</option>
+        <option value="3">3台</option>
+        <option value="4">4台</option>
+        <option value="5">5台</option>
+        <option value="unknown">わからない（後で確認）</option>
+        <option value="many">6台以上（要相談）</option>
+      </select>
+
+      <details class="opt" id="breakdownOpt">
+        <summary>内訳を指定する（任意）</summary>
+        <div class="opt-content">
+          <div class="grid-2">
+            <div>
+              <label>ノーマル</label>
+              <select id="normalQty"><option value="0">0台</option><option value="1">1台</option><option value="2">2台</option><option value="3">3台</option><option value="4">4台</option><option value="5">5台</option></select>
+            </div>
+            <div>
+              <label>お掃除機能付</label>
+              <select id="autoQty"><option value="0">0台</option><option value="1">1台</option><option value="2">2台</option><option value="3">3台</option><option value="4">4台</option><option value="5">5台</option></select>
+            </div>
+          </div>
+          <div style="margin-top:10px">
+            <label>機種不明</label>
+            <select id="unknownType"><option value="0">0台</option><option value="1">1台</option><option value="2">2台</option><option value="3">3台</option><option value="4">4台</option><option value="5">5台</option></select>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <div class="card hidden" id="estimateCard">
+      <div class="price-display">
+        <div class="price-sub">概算見積</div>
+        <div class="price-val" id="priceText">-</div>
+        <div class="price-note">他店で断られた機種・設置も対応します</div>
+      </div>
+      <p class="muted" style="text-align:center; margin-top:10px;">
+        ※正式な金額は設置状況等を確認後に確定します。
+      </p>
+    </div>
+  </div>
+
+  <div id="step2" class="hidden">
+    <div class="card">
+      <div class="section-title">希望日時（3つまで）</div>
+      <p class="muted">効率的なルートで調整し、確定日時をご連絡します。</p>
+      
+      <div style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+        <div>
+          <label>第1希望</label>
+          <input type="date" id="date1">
+        </div>
+        <div>
+          <label>第2希望</label>
+          <input type="date" id="date2">
+        </div>
+        <div>
+          <label>第3希望</label>
+          <input type="date" id="date3">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">お客様情報</div>
+      <label>お名前 <span style="color:red">*</span></label>
+      <input type="text" id="name" placeholder="山田 太郎">
+      
+      <label style="margin-top:12px;">電話番号 <span style="color:red">*</span></label>
+      <input type="tel" id="phone" placeholder="090-1234-5678">
+      
+      <label style="margin-top:12px;">住所（市区町村まででOK）</label>
+      <input type="text" id="city" placeholder="大阪市〇〇区">
+      
+      <label style="margin-top:12px;">補足・質問（任意）</label>
+      <textarea id="memo" placeholder="駐車場の有無や、気になる症状など"></textarea>
+    </div>
+
+    <div class="card">
+      <div class="section-title">重要確認事項</div>
+      
+      <div class="radio-group">
+        <label>駐車スペースはありますか？</label>
+        <label class="radio-label"><input type="radio" name="parking_status" value="ある/了解した" checked>ある / 無い場合はコインP負担了承</label>
+        <label class="radio-label"><input type="radio" name="parking_status" value="確保は難しい">確保は難しい（要相談）</label>
+      </div>
+      
+      <div class="radio-group" style="margin-top:16px;">
+        <label>設置高さ（床から3m以上ですか？）</label>
+        <label class="radio-label"><input type="radio" name="height_status" value="3m以下" checked>いいえ（3m以下）</label>
+        <label class="radio-label"><input type="radio" name="height_status" value="3m以上（吹き抜け等）">はい（+5,000円/台 承諾）</label>
+      </div>
+
+      <details class="opt" style="margin-top:16px;">
+        <summary>その他の確認（汚れ・設置状況など）</summary>
+        <div class="opt-content">
+           <label>最も気になる点</label>
+           <select id="reason">
+             <option value="定期清掃">定期清掃</option>
+             <option value="汚れ・カビ">汚れ・カビ（分解推奨）</option>
+             <option value="ニオイ">ニオイ（分解推奨）</option>
+           </select>
+
+           <label style="margin-top:10px;">設置状況（左右天井の隙間など）</label>
+           <select id="install_status">
+             <option value="特に問題なし">特に問題なし</option>
+             <option value="判別してほしい">狭いかも（写真を送る）</option>
+           </select>
+        </div>
+      </details>
+    </div>
+    
+    <div class="card" style="background:#fffbe6; border-color:#ffe58f;">
+      <div class="section-title" style="border-color:#faad14;">最終概算</div>
+      <div style="display:flex; justify-content:space-between; align-items:end;">
+         <div id="finalPriceLabel" style="font-weight:bold;">-</div>
+         <div id="finalPriceVal" style="font-size:20px; font-weight:900;">-</div>
+      </div>
+      <div id="finalAddons" class="muted" style="text-align:right; margin-top:4px;"></div>
+    </div>
+    
+    <div id="sendResult"></div>
+    <div style="height:20px;"></div></div>
+
+  <iframe name="gas_iframe" style="display:none;"></iframe>
+  <form id="gasForm" method="POST" target="gas_iframe" action="https://script.google.com/macros/s/AKfycbwcgGgbooBp2kkrpZ2rAdkbraGhz5QZVhujyIczt1kyVCgTZB4jgSOiLDxmfH5xvUv4vw/exec" class="hidden">
+     <input type="hidden" name="totalQty"><input type="hidden" name="normalQty"><input type="hidden" name="autoQty"><input type="hidden" name="unknownQty">
+     <input type="hidden" name="priceMode"><input type="hidden" name="priceText">
+     <input type="hidden" name="date1"><input type="hidden" name="date2"><input type="hidden" name="date3">
+     <input type="hidden" name="name"><input type="hidden" name="phone"><input type="hidden" name="city"><input type="hidden" name="memo">
+     <input type="hidden" name="parking_status"><input type="hidden" name="height_status"><input type="hidden" name="install_status"><input type="hidden" name="reason">
+     <input type="hidden" name="previewText"><input type="hidden" name="final_priceText">
+     <input type="hidden" name="highWorkQty"><input type="hidden" name="highWork_agree" value="承諾">
+     <input type="hidden" name="extra_high"><input type="hidden" name="extra_total">
+  </form>
+
+  <div class="btn-area">
+    <button id="backBtn" class="btn back hidden">戻る</button>
+    <button id="mainBtn" class="btn">台数を選択してください</button>
+  </div>
+
+</div>
+
+<script>
+  /* --- Config & Logic --- */
+  const PRICES = { normal: 10000, auto: 15000, high: 5000 };
+  
+  // Elements
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const mainBtn = document.getElementById('mainBtn');
+  const backBtn = document.getElementById('backBtn');
+  const estimateCard = document.getElementById('estimateCard');
+  
+  // Inputs
+  const totalQty = document.getElementById('totalQty');
+  const normalQty = document.getElementById('normalQty');
+  const autoQty = document.getElementById('autoQty');
+  const unknownQty = document.getElementById('unknownType');
+  
+  const date1 = document.getElementById('date1');
+  const date2 = document.getElementById('date2');
+  const date3 = document.getElementById('date3');
+  const nameIn = document.getElementById('name');
+  const phoneIn = document.getElementById('phone');
+  const cityIn = document.getElementById('city');
+  const memoIn = document.getElementById('memo');
+  
+  // Logic Status
+  let currentStep = 1;
+  let estimated = { min:0, max:0, mode:'-' };
+
+  /* --- Event Listeners --- */
+  totalQty.addEventListener('change', updateEstimate);
+  [normalQty, autoQty, unknownQty].forEach(el => el.addEventListener('change', updateEstimate));
+  
+  // Step 2 Inputs Validation
+  [nameIn, phoneIn].forEach(el => el.addEventListener('input', validateStep2));
+  
+  // Submit Action
+  mainBtn.addEventListener('click', () => {
+    if (currentStep === 1) {
+      if (mainBtn.classList.contains('primary')) goToStep2();
+    } else {
+      if (mainBtn.classList.contains('primary')) submitForm();
+    }
+  });
+  
+  backBtn.addEventListener('click', () => {
+    step2.classList.add('hidden');
+    step1.classList.remove('hidden');
+    backBtn.classList.add('hidden');
+    currentStep = 1;
+    updateEstimate(); // Reset button text
+  });
+
+  /* --- Functions --- */
+  function yen(n) { return n.toLocaleString(); }
+  
+  function updateEstimate() {
+    const total = totalQty.value;
+    if (!total) {
+      mainBtn.className = 'btn';
+      mainBtn.innerText = '台数を選択してください';
+      estimateCard.classList.add('hidden');
+      return;
+    }
+
+    estimateCard.classList.remove('hidden');
+    mainBtn.className = 'btn primary';
+    mainBtn.innerText = 'この内容で日程調整へ';
+
+    // Calculation
+    if (total === 'unknown') {
+      estimated = { mode:'後ほど', text:'確認後にご案内' };
+    } else if (total === 'many') {
+      estimated = { mode:'要相談', text:'要相談' };
+    } else {
+      const tNum = parseInt(total);
+      const nNum = parseInt(normalQty.value);
+      const aNum = parseInt(autoQty.value);
+      const uNum = parseInt(unknownQty.value);
+      
+      // Determine if fixed
+      if (nNum + aNum + uNum === tNum && uNum === 0) {
+        const cost = (nNum * PRICES.normal) + (aNum * PRICES.auto);
+        estimated = { mode:'確定', val: cost, text: yen(cost) + '円' };
+      } else {
+        const min = tNum * PRICES.normal;
+        const max = tNum * PRICES.auto;
+        estimated = { mode:'レンジ', min, max, text: yen(min) + '〜' + yen(max) + '円' };
+      }
+    }
+    
+    document.getElementById('priceText').innerText = estimated.text;
+  }
+
+  function goToStep2() {
+    step1.classList.add('hidden');
+    step2.classList.remove('hidden');
+    backBtn.classList.remove('hidden');
+    currentStep = 2;
+    validateStep2();
+    updateFinalReview();
+    window.scrollTo(0,0);
+  }
+
+  // Update Final Price in Step 2 (inc. Options)
+  document.querySelectorAll('input[name="height_status"]').forEach(el => el.addEventListener('change', updateFinalReview));
+
+  function updateFinalReview() {
+    const isHigh = document.querySelector('input[name="height_status"]:checked').value.includes('3m以上');
+    let addText = [];
+    let addCost = 0;
+    
+    if (isHigh) {
+      // 簡易ロジック：全台数x5000円とする（厳密には選択させてもいいが、スマホフォームはシンプルな方が離脱しない）
+      // もし台数が数値なら計算
+      const tVal = parseInt(totalQty.value);
+      if (!isNaN(tVal)) {
+        addCost += tVal * PRICES.high;
+        addText.push(`高所作業 +${yen(addCost)}`);
+      } else {
+         addText.push("高所作業(別途)");
+      }
+    }
+
+    const label = document.getElementById('finalPriceLabel');
+    const val = document.getElementById('finalPriceVal');
+    const addons = document.getElementById('finalAddons');
+
+    label.innerText = estimated.mode === '確定' || estimated.mode === 'レンジ' ? '概算合計' : '見積状況';
+    
+    if (estimated.mode === '確定') {
+      val.innerText = yen(estimated.val + addCost) + '円';
+    } else if (estimated.mode === 'レンジ') {
+      val.innerText = yen(estimated.min + addCost) + '〜' + yen(estimated.max + addCost) + '円';
+    } else {
+      val.innerText = estimated.text;
+    }
+    
+    addons.innerText = addText.length ? addText.join(' / ') : '追加オプションなし';
+    
+    // Save for Hidden
+    document.querySelector('input[name="final_priceText"]').value = val.innerText;
+    document.querySelector('input[name="extra_high"]').value = isHigh ? addCost : 0;
+    document.querySelector('input[name="extra_total"]').value = addCost;
+    document.querySelector('input[name="highWorkQty"]').value = isNaN(parseInt(totalQty.value)) ? 0 : parseInt(totalQty.value);
+  }
+
+  function validateStep2() {
+    const ok = nameIn.value.trim() && (phoneIn.value.replace(/-/g,'').length >= 10);
+    if (ok) {
+      mainBtn.className = 'btn primary';
+      mainBtn.innerText = '見積・申込を送信';
+    } else {
+      mainBtn.className = 'btn';
+      mainBtn.innerText = '必須項目を入力してください';
+    }
+  }
+
+  function submitForm() {
+    if (mainBtn.className.includes('btn primary') === false) return;
+    
+    mainBtn.disabled = true;
+    mainBtn.innerText = '送信中...';
+
+    // Populate Hidden Fields
+    const f = document.getElementById('gasForm');
+    f.totalQty.value = totalQty.value;
+    f.normalQty.value = normalQty.value;
+    f.autoQty.value = autoQty.value;
+    f.unknownQty.value = unknownQty.value;
+    f.priceMode.value = estimated.mode;
+    f.priceText.value = estimated.text;
+    
+    f.date1.value = date1.value;
+    f.date2.value = date2.value;
+    f.date3.value = date3.value;
+    
+    f.name.value = nameIn.value;
+    f.phone.value = phoneIn.value;
+    f.city.value = cityIn.value;
+    f.memo.value = memoIn.value;
+    
+    f.parking_status.value = document.querySelector('input[name="parking_status"]:checked').value;
+    f.height_status.value = document.querySelector('input[name="height_status"]:checked').value;
+    f.install_status.value = document.getElementById('install_status').value;
+    f.reason.value = document.getElementById('reason').value;
+    
+    // Preview Text for Admin
+    f.previewText.value = `申込：${nameIn.value}\nTEL：${phoneIn.value}\n台数：${totalQty.value}台\n金額：${document.getElementById('finalPriceVal').innerText}`;
+
+    // Submit
+    f.submit();
+
+    // UI Feedback
+    setTimeout(() => {
+      alert('送信しました！\n担当者より折り返しご連絡いたします。');
+      mainBtn.innerText = '送信完了';
+    }, 1500);
+  }
+</script>
+</body>
+</html>
