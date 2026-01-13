@@ -176,6 +176,10 @@
       
       <label style="margin-top:12px;">電話番号 <span style="color:red">*</span></label>
       <input type="tel" id="phone" placeholder="090-1234-5678">
+
+      <label style="margin-top:12px;">メールアドレス <span style="color:red">*</span></label>
+      <input type="email" id="email" placeholder="example@gmail.com">
+      <p class="muted">※受付完了メールを自動送信します</p>
       
       <label style="margin-top:12px;">住所（市区町村まででOK）</label>
       <input type="text" id="city" placeholder="大阪市〇〇区">
@@ -240,6 +244,7 @@
      <input type="hidden" name="previewText"><input type="hidden" name="final_priceText">
      <input type="hidden" name="highWorkQty"><input type="hidden" name="highWork_agree" value="承諾">
      <input type="hidden" name="extra_high"><input type="hidden" name="extra_total">
+     <input type="hidden" name="email">
   </form>
 
   <div class="btn-area">
@@ -397,6 +402,7 @@
   }
 
   function validateStep2() {
+    const emailVal = document.getElementById('email').value.trim();
     const ok = nameIn.value.trim() && (phoneIn.value.replace(/-/g,'').length >= 10);
     if (ok) {
       mainBtn.className = 'btn primary';
@@ -428,6 +434,7 @@
     
     f.name.value = nameIn.value;
     f.phone.value = phoneIn.value;
+    f.email.value = document.getElementById('email').value; // ★ここを追加！
     f.city.value = cityIn.value;
     f.memo.value = memoIn.value;
     
@@ -448,6 +455,8 @@
       mainBtn.innerText = '送信完了';
     }, 1500);
   }
+  document.getElementById('email').addEventListener('input', validateStep2);
 </script>
 </body>
 </html>
+
