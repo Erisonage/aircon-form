@@ -179,7 +179,7 @@
       <input type="tel" id="phone" placeholder="090-1234-5678">
 
       <label style="margin-top:12px;">メールアドレス <span style="color:red">*</span></label>
-      <input type="email" id="email" placeholder="example@gmail.com">
+      <input type="email" id="email" placeholder="example@gmail.com" required>
       <p class="muted">※受付完了メールを自動送信します</p>
       
       <label style="margin-top:12px;">住所（市区町村まででOK）</label>
@@ -408,11 +408,13 @@
     document.querySelector('input[name="highWorkQty"]').value = isNaN(parseInt(totalQty.value)) ? 0 : parseInt(totalQty.value);
   }
 
-  // ★修正：メールアドレスチェックを追加★
+  // ★修正：入力チェック強化版★
   function validateStep2() {
     const nameOk = nameIn.value.trim().length > 0;
     const phoneOk = phoneIn.value.replace(/[^0-9]/g,'').length >= 10;
-    const emailOk = emailIn.value.includes('@') && emailIn.value.includes('.'); // 簡易チェック
+    // Emailは「@」と「.」が含まれ、かつ3文字以上あるか
+    const emailVal = emailIn.value.trim();
+    const emailOk = emailVal.length > 3 && emailVal.includes('@') && emailVal.includes('.');
 
     if (nameOk && phoneOk && emailOk) {
       mainBtn.className = 'btn primary';
@@ -424,6 +426,11 @@
   }
 
   function submitForm() {
+    // クラス名チェックだけでなく、念のため値も再チェック（ガード）
+    if (!emailIn.value.includes('@')) {
+      alert('メールアドレスを正しく入力してください');
+      return;
+    }
     if (mainBtn.className.includes('btn primary') === false) return;
     
     mainBtn.disabled = true;
@@ -443,7 +450,7 @@
     
     f.name.value = nameIn.value;
     f.phone.value = phoneIn.value;
-    f.email.value = emailIn.value; // ★Email送信
+    f.email.value = emailIn.value;
     f.city.value = cityIn.value;
     f.memo.value = memoIn.value;
     
