@@ -41,7 +41,7 @@
     label { display: block; font-weight: 600; font-size: 14px; margin-bottom: 6px; }
     select, input, textarea {
       width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px;
-      font-size: 16px; /* Prevents iOS zoom */ background: #fff; appearance: none;
+      font-size: 16px; background: #fff; appearance: none;
     }
     select { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 10px center; background-size: 16px; }
     textarea { min-height: 80px; resize: vertical; }
@@ -92,7 +92,7 @@
 
 <div class="wrap">
   <header>
-  <h1>H4-cleanup 無料見積・申込</h1>
+    <h1>H4-cleanup エアコン見積・申込</h1>
     <div class="cert-box">
       <span class="cert-icon">🛡️</span>
       <span>セーフティマイスター認定店</span>
@@ -171,6 +171,7 @@
 
     <div class="card">
       <div class="section-title">お客様情報</div>
+      
       <label>お名前 <span style="color:red">*</span></label>
       <input type="text" id="name" placeholder="山田 太郎">
       
@@ -225,26 +226,27 @@
     <div class="card" style="background:#fffbe6; border-color:#ffe58f;">
       <div class="section-title" style="border-color:#faad14;">最終概算</div>
       <div style="display:flex; justify-content:space-between; align-items:end;">
-         <div id="finalPriceLabel" style="font-weight:bold;">-</div>
-         <div id="finalPriceVal" style="font-size:20px; font-weight:900;">-</div>
+          <div id="finalPriceLabel" style="font-weight:bold;">-</div>
+          <div id="finalPriceVal" style="font-size:20px; font-weight:900;">-</div>
       </div>
       <div id="finalAddons" class="muted" style="text-align:right; margin-top:4px;"></div>
     </div>
     
     <div id="sendResult"></div>
-    <div style="height:20px;"></div></div>
+    <div style="height:20px;"></div>
+  </div>
 
   <iframe name="gas_iframe" style="display:none;"></iframe>
+  
   <form id="gasForm" method="POST" target="gas_iframe" action="https://script.google.com/macros/s/AKfycbxVQfx27yqk2WpyAoTmT0BFnv6l4LrKHl3aG8Es01HGK4vn6CXLdKbmAVWoZtZMnt9tOg/exec" class="hidden">
      <input type="hidden" name="totalQty"><input type="hidden" name="normalQty"><input type="hidden" name="autoQty"><input type="hidden" name="unknownQty">
      <input type="hidden" name="priceMode"><input type="hidden" name="priceText">
      <input type="hidden" name="date1"><input type="hidden" name="date2"><input type="hidden" name="date3">
-     <input type="hidden" name="name"><input type="hidden" name="phone"><input type="hidden" name="city"><input type="hidden" name="memo">
+     <input type="hidden" name="name"><input type="hidden" name="phone"><input type="hidden" name="email"><input type="hidden" name="city"><input type="hidden" name="memo">
      <input type="hidden" name="parking_status"><input type="hidden" name="height_status"><input type="hidden" name="install_status"><input type="hidden" name="reason">
      <input type="hidden" name="previewText"><input type="hidden" name="final_priceText">
      <input type="hidden" name="highWorkQty"><input type="hidden" name="highWork_agree" value="承諾">
      <input type="hidden" name="extra_high"><input type="hidden" name="extra_total">
-     <input type="hidden" name="email">
   </form>
 
   <div class="btn-area">
@@ -276,6 +278,7 @@
   const date3 = document.getElementById('date3');
   const nameIn = document.getElementById('name');
   const phoneIn = document.getElementById('phone');
+  const emailIn = document.getElementById('email');
   const cityIn = document.getElementById('city');
   const memoIn = document.getElementById('memo');
   
@@ -287,8 +290,8 @@
   totalQty.addEventListener('change', updateEstimate);
   [normalQty, autoQty, unknownQty].forEach(el => el.addEventListener('change', updateEstimate));
   
-  // Step 2 Inputs Validation
-  [nameIn, phoneIn].forEach(el => el.addEventListener('input', validateStep2));
+  // Step 2 Inputs Validation (Validation Trigger)
+  [nameIn, phoneIn, emailIn].forEach(el => el.addEventListener('input', validateStep2));
   
   // Submit Action
   mainBtn.addEventListener('click', () => {
@@ -311,8 +314,8 @@
   function yen(n) { return n.toLocaleString(); }
   
   function updateEstimate() {
-    const total = totalQty.value;
-    if (!total) {
+    const totalVal = totalQty.value;
+    if (!totalVal) {
       mainBtn.className = 'btn';
       mainBtn.innerText = '台数を選択してください';
       estimateCard.classList.add('hidden');
@@ -323,19 +326,26 @@
     mainBtn.className = 'btn primary';
     mainBtn.innerText = 'この内容で日程調整へ';
 
-    // Calculation
-    if (total === 'unknown') {
+    if (totalVal === 'unknown') {
       estimated = { mode:'後ほど', text:'確認後にご案内' };
-    } else if (total === 'many') {
+    } else if (totalVal === 'many') {
       estimated = { mode:'要相談', text:'要相談' };
     } else {
-      const tNum = parseInt(total);
+      const tNum = parseInt(totalVal);
       const nNum = parseInt(normalQty.value);
       const aNum = parseInt(autoQty.value);
       const uNum = parseInt(unknownQty.value);
-      
-      // Determine if fixed
-      if (nNum + aNum + uNum === tNum && uNum === 0) {
+      const breakdownSum = nNum + aNum + uNum;
+
+      if (breakdownSum > tNum) {
+         estimated = { mode:'エラー', text: '台数超過' };
+         document.getElementById('priceText').innerHTML = '<span style="color:red;font-size:18px;">内訳が合計より多いです</span>';
+         mainBtn.className = 'btn';
+         mainBtn.innerText = '内訳を修正してください';
+         return;
+      }
+
+      if (breakdownSum === tNum && uNum === 0) {
         const cost = (nNum * PRICES.normal) + (aNum * PRICES.auto);
         estimated = { mode:'確定', val: cost, text: yen(cost) + '円' };
       } else {
@@ -358,7 +368,7 @@
     window.scrollTo(0,0);
   }
 
-  // Update Final Price in Step 2 (inc. Options)
+  // Update Final Price
   document.querySelectorAll('input[name="height_status"]').forEach(el => el.addEventListener('change', updateFinalReview));
 
   function updateFinalReview() {
@@ -367,8 +377,6 @@
     let addCost = 0;
     
     if (isHigh) {
-      // 簡易ロジック：全台数x5000円とする（厳密には選択させてもいいが、スマホフォームはシンプルな方が離脱しない）
-      // もし台数が数値なら計算
       const tVal = parseInt(totalQty.value);
       if (!isNaN(tVal)) {
         addCost += tVal * PRICES.high;
@@ -394,22 +402,24 @@
     
     addons.innerText = addText.length ? addText.join(' / ') : '追加オプションなし';
     
-    // Save for Hidden
     document.querySelector('input[name="final_priceText"]').value = val.innerText;
     document.querySelector('input[name="extra_high"]').value = isHigh ? addCost : 0;
     document.querySelector('input[name="extra_total"]').value = addCost;
     document.querySelector('input[name="highWorkQty"]').value = isNaN(parseInt(totalQty.value)) ? 0 : parseInt(totalQty.value);
   }
 
+  // ★修正：メールアドレスチェックを追加★
   function validateStep2() {
-    const emailVal = document.getElementById('email').value.trim();
-    const ok = nameIn.value.trim() && (phoneIn.value.replace(/-/g,'').length >= 10);
-    if (ok) {
+    const nameOk = nameIn.value.trim().length > 0;
+    const phoneOk = phoneIn.value.replace(/[^0-9]/g,'').length >= 10;
+    const emailOk = emailIn.value.includes('@') && emailIn.value.includes('.'); // 簡易チェック
+
+    if (nameOk && phoneOk && emailOk) {
       mainBtn.className = 'btn primary';
       mainBtn.innerText = '見積・申込を送信';
     } else {
       mainBtn.className = 'btn';
-      mainBtn.innerText = '必須項目を入力してください';
+      mainBtn.innerText = '必須項目(名前/電話/Email)を入力';
     }
   }
 
@@ -419,7 +429,6 @@
     mainBtn.disabled = true;
     mainBtn.innerText = '送信中...';
 
-    // Populate Hidden Fields
     const f = document.getElementById('gasForm');
     f.totalQty.value = totalQty.value;
     f.normalQty.value = normalQty.value;
@@ -434,7 +443,7 @@
     
     f.name.value = nameIn.value;
     f.phone.value = phoneIn.value;
-    f.email.value = document.getElementById('email').value; // ★ここを追加！
+    f.email.value = emailIn.value; // ★Email送信
     f.city.value = cityIn.value;
     f.memo.value = memoIn.value;
     
@@ -443,21 +452,15 @@
     f.install_status.value = document.getElementById('install_status').value;
     f.reason.value = document.getElementById('reason').value;
     
-    // Preview Text for Admin
-    f.previewText.value = `申込：${nameIn.value}\nTEL：${phoneIn.value}\n台数：${totalQty.value}台\n金額：${document.getElementById('finalPriceVal').innerText}`;
+    f.previewText.value = `申込：${nameIn.value}\nTEL：${phoneIn.value}\nEmail：${emailIn.value}\n台数：${totalQty.value}台\n金額：${document.getElementById('finalPriceVal').innerText}`;
 
-    // Submit
     f.submit();
 
-    // UI Feedback
     setTimeout(() => {
-      alert('送信しました！\n担当者より折り返しご連絡いたします。');
+      alert('送信しました！\n確認メールをお送りしましたのでご確認ください。');
       mainBtn.innerText = '送信完了';
     }, 1500);
   }
-  document.getElementById('email').addEventListener('input', validateStep2);
 </script>
 </body>
 </html>
-
-
